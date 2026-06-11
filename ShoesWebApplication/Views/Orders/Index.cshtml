@@ -1,0 +1,62 @@
+@model IEnumerable<ShoesWebApplication.Models.Order>
+
+@{
+    ViewData["Title"] = "Orders";
+}
+
+<h2>Заказы</h2>
+
+@if (User.IsInRole("Администратор"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Добавить заказ</a>
+    </p>
+}
+
+<div class="d-flex flex-column gap-3">
+
+    @foreach (var item in Model)
+    {
+        <div class="border p-3 d-flex justify-content-between align-items-stretch">
+
+            <!-- Левая часть -->
+            <div style="flex:1; padding-right:20px; border-right:1px solid #ddd;">
+
+                <div><b>ФИО:</b> @item.User?.FullName</div>
+
+                <div><b>Статус:</b> @item.OrderStatus?.Status</div>
+
+                <div>
+                    <b>Адрес ПВЗ:</b>
+                    @item.Address?.Index,
+                    @item.Address?.City,
+                    @item.Address?.Street,
+                    @item.Address?.HouseNumber
+                </div>
+
+                <div><b>Дата заказа:</b> @item.OrderDate</div>
+
+                <!-- если нужно можно добавить код 
+                <div><b>Код:</b> @item.Code</div> -->
+            </div>
+
+            <!-- Правая часть -->
+            <div style="width:180px; text-align:center;">
+                <b>Дата доставки</b>
+                <div style="font-size:16px; margin-top:10px;">
+                    @item.SupplyDate
+                </div>
+            </div>
+
+            @if (User.IsInRole("Администратор"))
+            {
+                <div class="mt-1 mb-3">
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </div>
+            }
+
+        </div>
+    }
+
+</div>

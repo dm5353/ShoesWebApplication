@@ -13,6 +13,46 @@
     </p>
 }
 
+@if (User.IsInRole("Администратор") || User.IsInRole("Менеджер"))
+{
+<div class="row mb-3">
+
+    <div class="col-md-4">
+        <input id="search"
+               class="form-control"
+               placeholder="Поиск"
+               value="@ViewBag.Search" />
+    </div>
+
+    <div class="col-md-3">
+        <select id="supplier" class="form-select">
+            <option value="">Все поставщики</option>
+
+            @foreach (var supplier in ViewBag.Suppliers)
+            {
+                <option value="@supplier.Id"
+                        selected="@(ViewBag.SupplierId == supplier.Id)">
+                    @supplier.Name
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <select id="sort" class="form-select">
+            <option value="">Без сортировки</option>
+            <option value="asc" selected="@(ViewBag.SortOrder == "asc")">
+                Количество ↑
+            </option>
+            <option value="desc" selected="@(ViewBag.SortOrder == "desc")">
+                Количество ↓
+            </option>
+        </select>
+    </div>
+
+</div>
+}
+
 @foreach (var item in Model)
 {
     bool isBigDiscount = item.Discount > 15;
@@ -75,9 +115,40 @@
         </div>
         @if (User.IsInRole("Администратор")){
     <div>
-            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | <a asp-action="Details" asp-route-id="@item.Id">Details</a> | <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
     </div>
         }
 
     </div>
 }
+
+<script>
+    const search = document.getElementById('search');
+    const supplier = document.getElementById('supplier');
+    const sort = document.getElementById('sort');
+
+    let timer;
+
+    function updateFilters() {
+        const params = new URLSearchParams();
+
+        if (search.value)
+            params.set('search', search.value);
+
+        if (supplier.value)
+            params.set('supplierId', supplier.value);
+
+        if (sort.value)
+            params.set('sortOrder', sort.value);
+
+        window.location.href = '?' + params.toString();
+    }
+
+    search.addEventListener('input', () => {
+        clearTimeout(timer);
+        timer = setTimeout(updateFilters, 1000);
+    });
+
+    supplier.addEventListener('change', updateFilters);
+    sort.addEventListener('change', updateFilters);
+</script>
