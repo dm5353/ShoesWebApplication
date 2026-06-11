@@ -88,6 +88,11 @@ public class OrdersController : Controller
         {
             return NotFound();
         }
+
+        ViewData["Users"] = _context.Users.ToList();
+        ViewData["Addresses"] = _context.Addresses.ToList();
+        ViewData["Statuses"] = _context.OrderStatuses.ToList();
+
         return View(order);
     }
 
@@ -124,6 +129,11 @@ public class OrdersController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
+
+        ViewData["Users"] = _context.Users.ToList();
+        ViewData["Addresses"] = _context.Addresses.ToList();
+        ViewData["Statuses"] = _context.OrderStatuses.ToList();
+
         return View(order);
     }
 
@@ -137,7 +147,10 @@ public class OrdersController : Controller
         }
 
         var order = await _context.Orders
-            .FirstOrDefaultAsync(m => m.Id == id);
+    .Include(o => o.User)
+    .Include(o => o.Address)
+    .Include(o => o.OrderStatus)
+    .FirstOrDefaultAsync(m => m.Id == id);
         if (order == null)
         {
             return NotFound();

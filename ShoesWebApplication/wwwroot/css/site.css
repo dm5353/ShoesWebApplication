@@ -20,3 +20,61 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+body {
+    font-family: "Times New Roman", Times, serif !important;
+    background-color: white !important;
+}
+
+/* шапка / акцентные блоки */
+.bg-accent {
+    background-color: #7FFF00 !important;
+}
+
+/* кнопки Bootstrap override */
+.btn-primary,
+.btn {
+    background-color: #00FA9A !important;
+    border-color: #00FA9A !important;
+    color: black !important;
+}
+
+    .btn-primary:hover,
+    .btn:hover {
+        background-color: #00e68a !important;
+        border-color: #00e68a !important;
+    }
+
+/* ссылки под кнопки тоже в стиль */
+a {
+    color: #00a86b;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Times New Roman", Times, serif !important;
+    color: #00FA9A !important;
+}
+
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-success,
+.btn-danger,
+.btn-warning,
+.btn-info {
+    background-color: #00FA9A !important;
+    border-color: #00FA9A !important;
+    color: black !important;
+}
+
+    .btn:hover,
+    .btn-primary:hover,
+    .btn-secondary:hover,
+    .btn-success:hover,
+    .btn-danger:hover,
+    .btn-warning:hover,
+    .btn-info:hover {
+        background-color: #7FFF00 !important;
+        border-color: #7FFF00 !important;
+        color: black !important;
+    }
