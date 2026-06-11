@@ -1,0 +1,83 @@
+@model IEnumerable<ShoesWebApplication.Models.Good>
+
+@{
+    ViewData["Title"] = "Goods";
+}
+
+<h2>Товары</h2>
+
+@if (User.IsInRole("Администратор"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Добавить товар</a>
+    </p>
+}
+
+@foreach (var item in Model)
+{
+    bool isBigDiscount = item.Discount > 15;
+    bool isOutOfStock = item.Count == 0;
+
+    decimal finalPrice = item.Price - (item.Price * item.Discount / 100);
+
+    <div class="border p-3 mb-3 d-flex"
+         style="gap:20px;
+        background-color:@(isOutOfStock ? "#87CEEB" : (isBigDiscount ? "#2E8B57" : "transparent"));">
+
+        <!-- Фото -->
+        <div style="width:200px; height:150px; border:1px solid #ccc;
+            display:flex; align-items:center; justify-content:center;">
+            @if (!string.IsNullOrEmpty(item.Image))
+            {
+                <img src="/images/@item.Image" style="max-width:100%; max-height:100%;" />
+            }
+            else
+            {
+                <img src="/images/picture.png" style="max-width:100%; max-height:100%;" />
+            }
+        </div>
+
+        <!-- Информация -->
+        <div style="flex:1;">
+            <div><b>Категория:</b> @item.GoodCategory?.Category</div>
+            <div><b>Название:</b> @item.Name</div>
+            <div><b>Описание:</b> @item.Description</div>
+            <div><b>Производитель:</b> @item.Manufacturer?.Name</div>
+            <div><b>Поставщик:</b> @item.Supplier?.Name</div>
+            <div>
+                <b>Цена:</b>
+
+                @if (item.Discount > 0)
+                {
+                    <span style="color:red; text-decoration:line-through;">
+                        @item.Price ₽
+                    </span>
+
+                    <span style="color:black; margin-left:8px;">
+                        @finalPrice.ToString("0.00") ₽
+                    </span>
+                }
+                else
+                {
+                    <span>@item.Price ₽</span>
+                }
+            </div>
+            <div><b>Ед. измерения:</b> @item.GoodMeasurement?.Name</div>
+            <div><b>Количество:</b> @item.Count</div>
+        </div>
+
+        <!-- Скидка -->
+        <div style="width:120px; text-align:center; border-left:1px solid #ddd; padding-left:10px;">
+            <b>Скидка</b>
+            <div style="font-size:20px; color:red;">
+                @item.Discount%
+            </div>
+        </div>
+        @if (User.IsInRole("Администратор")){
+    <div>
+            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | <a asp-action="Details" asp-route-id="@item.Id">Details</a> | <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+    </div>
+        }
+
+    </div>
+}
